@@ -1,6 +1,6 @@
 {% extends "home.html" %}
 
-{% block title %}user CRUD{% endblock %}
+{% block title %}club CRUD{% endblock %}
 
 {% block content %}
 
@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for user in usersAll%}
+        {% for club in usersAll%}
         <tr>
             <td> {{club.club_name}}</td>
             <td> {{club.price}}</td>
@@ -28,7 +28,7 @@
                             data-club_name="{{club.club_name}}">Edit
                     </button>
                 </a>
-                <a href="/delete_clab?name={{club.club_name}}"
+                <a href="/delete_club?name={{club.club_name}}"
                    title="delete button">
                     <button type="button" class="btn btn-danger" name="btn_delete_club"
                             data-club_name="{{club.club_name}}">Delete

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextField, SubmitField, DateField, IntegerField, DateTimeField
-from wtforms.validators import DataRequired, Length, Email, NumberRange
+from wtforms.validators import DataRequired, Length, Email, NumberRange, Regexp
 from datetime import date, datetime
 
 class UsersForm(FlaskForm):
@@ -18,7 +18,7 @@ class UsersForm(FlaskForm):
 class ComplexForm(FlaskForm):
     """Complex CRUD"""
     name = StringField('Complex name', [
-        DataRequired("Enter name complex"), Length(2,20,"Name should be from 2 to 20 chars")])
+        DataRequired("Enter name complex"),  Regexp('^(done|rejected|awaiting)$', message='Enter done or rejected or awaiting')])
 
     submit = SubmitField('Submit')
 
@@ -33,13 +33,16 @@ class UserDoComplexForm(FlaskForm):
 
     submit = SubmitField('Submit')
 
+
+
 class ClubForm(FlaskForm):
     club_name = StringField("ClabName", [
         DataRequired("Enter name Club that exist")])
-    prise = IntegerField("Prise",[
+    price = IntegerField("Price", [
                            DataRequired("Enter User Id that exist"), NumberRange(min=0, max=999)])
     city = StringField("City", [
-        DataRequired("Enter name Club that exist") ])
-    rating = IntegerField("rating",[
+        DataRequired("Enter name Club that exist"), Regexp('^(LA|Berlin)$', message='Enter LA or Berlin')])
+    rating = IntegerField("rating", [
                            DataRequired("Enter User Id that exist"), NumberRange(min=1, max=10)])
 
+    submit = SubmitField('Submit')

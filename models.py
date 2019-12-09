@@ -31,7 +31,7 @@ class Club(Base):
     __tablename__ = 'club'
 
     club_name = Column(String(20), primary_key=True)
-    prise = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=False)
     city = Column(String(6), nullable=False)
     rating = Column(Integer, nullable=False)
 

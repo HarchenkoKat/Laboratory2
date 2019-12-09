@@ -236,16 +236,17 @@ def club_create():
             )
             db.session.add(club_data)
             db.session.commit()
-            return redirect(url_for('clubs'))
+            return redirect(url_for('club'))
     return render_template('club_create.html', form=form, form_name='Create club')
 
 @app.route('/club_update', methods=['GET','POST'])
 def club_update():
     form = ClubForm()
-    club_name = request.args.get('club_name')
+    name = request.args.get('name')
     if request.method == 'GET':
         field = db.session.query(Club).filter(Club.club_name == name).one()
-        form.prise.data = field.prise
+        form.club_name.data = field.club_name
+        form.price.data = field.price
         form.city.data = field.city
         form.rating.data = field.rating
 
@@ -255,8 +256,8 @@ def club_update():
             return render_template('club_create.html', form=form, form_name='Update club')
 
         club = db.session.query(Club).filter(Club.club_name == name).one()
-        club.club_name = form.name.data
-        club.price = form.prise.data
+        club.club_name = form.club_name.data
+        club.price = form.price.data
         club.city = form.city.data
         club.rating = form.rating.data
 
@@ -291,9 +292,8 @@ def rejects():
     df_res['ratio'] = df_res.rej / df_res.alll
 
     bar = go.Bar(x=df_res.hour, y=df_res.ratio)
-    #fig = go.Figure([go.Scatter(x=df_res.hour, y=df_res.ratio)])
-    #scatter = go.Scatter(x=,y=,z=)
-    print(df_res.hour, df_res.ratio)
+
+    #print(df_res.hour, df_res.ratio)
     graphJSON = json.dumps([bar], cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('dashboard.html', graphJSON=graphJSON,ids=[0])
 
@@ -309,6 +309,23 @@ def scatter():
 
     #print(age)
     graphJSON = json.dumps([scatter], cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('dashboard.html', graphJSON=graphJSON,ids=[0])
+
+@app.route('/barclub')
+def barclub():
+    data = db.session.query(Club).all()
+    name = [obj.club_name for obj in data]
+    city = [obj.city for obj in data]
+
+    df = pd.DataFrame(columns=['name', 'city'])
+    df.name = name
+    df.city = city
+    df_res = df.groupby('city').name.count().reset_index()
+
+    bar = go.Bar(x=df_res.city, y=df_res.name)
+
+    #print(df_res.hour, df_res.ratio)
+    graphJSON = json.dumps([bar], cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('dashboard.html', graphJSON=graphJSON,ids=[0])
 
 if __name__ == '__main__':
